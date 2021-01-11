@@ -1,0 +1,29 @@
+{
+  "name": "wtf-tldr",
+  "version": "0.0.1",
+  "description": "create helpful json data from wikipedia dumps",
+  "author": "Spencer Kelly @spencermountain",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "https://github.com/spencermountain/wtf-tldr#readme",
+  "bugs": {
+    "url": "https://github.com/spencermountain/wtf-tldr/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spencermountain/wtf-tldr.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "colorette": "^1.2.1",
+    "node-wget-promise": "^0.1.6",
+    "shelljs": "^0.8.4",
+    "sunday-driver": "^1.0.2",
+    "wtf_wikipedia": "^8.5.1",
+    "wtf-plugin-classify": "^0.2.0",
+    "wtf-plugin-person": "^0.1.0"
+  }
+}
