@@ -36,7 +36,7 @@ const toJSON = function () {
 module.exports = async function () {
   try {
     // use an already-downloaded file?
-    if (test('-e', `./files/pageviews.tsv`)) {
+    if (test('-e', `./files/${project}-pageviews.tsv`)) {
       console.log(`using file: '${file}'`)
       console.log(green(' done.'))
       // return
