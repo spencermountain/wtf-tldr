@@ -2,8 +2,17 @@ const { workerData, parentPort } = require('worker_threads')
 const { yellow, red, magenta } = require('colorette')
 const sundayDriver = require('sunday-driver')
 const parsePage = require('./04-page')
-let { lang } = require('../config')
-const pageViews = require(`../files/${lang}.wikipedia-pageviews.json`)
+let { lang, project } = require('../config')
+const fs = require('fs')
+let pageViews = {}
+
+// load these
+const getPageViews = function () {
+  let str = fs
+    .readFileSync(`./files/${lang}.${project}-pageviews.json`)
+    .toString()
+  return JSON.parse(str)
+}
 
 let pages = 0
 
@@ -33,11 +42,11 @@ const driver = {
 }
 
 // logger
-console.log(
-  magenta(` worker #${workerData.n} @ ${pages.toLocaleString()} pages`)
-)
-// let monitor = setInterval(() => {
-// }, 1000 * workerData.n + 5000)
+// console.log(
+//   magenta(` worker #${workerData.n} @ ${pages.toLocaleString()} pages`)
+// )
+
+pageViews = getPageViews()
 
 const p = sundayDriver(driver)
 p.catch((err) => {

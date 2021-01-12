@@ -1,5 +1,5 @@
 // a self-updating command-line
-function printCLI(txt) {
+const printCLI = function (txt) {
   if (process.stdout && process.stdout.clearLine) {
     process.stdout.clearLine()
     process.stdout.cursorTo(0)
@@ -7,4 +7,29 @@ function printCLI(txt) {
   }
 }
 
-module.exports = { printCLI: printCLI }
+//wikipedia title escaping
+const encode = function (title = '') {
+  title = title.replace(/ /g, '_')
+  title = title.trim()
+  title = encodeURIComponent(title)
+  return title
+}
+//wikipedia title escaping
+const decode = function (title = '') {
+  title = title.replace(/_/g, ' ')
+  title = title.trim()
+  title = decodeURIComponent(title)
+  return title
+}
+
+// wait a second
+const sleep = function (ms = 1500) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+module.exports = {
+  printCLI: printCLI,
+  encode: encode,
+  decode: decode,
+  sleep: sleep,
+}

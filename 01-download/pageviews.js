@@ -1,14 +1,16 @@
 const { blue, green, yellow } = require('colorette')
 const { exec, test } = require('shelljs')
 const wget = require('node-wget-promise')
-const { printCLI } = require('../_lib/fns')
-const file = `./files/pageviews.tsv.bz2`
+const { printCLI, decode } = require('../_lib/fns')
+const file = `./files/pageviews.tsv`
 const fs = require('fs')
 let { lang } = require('../config')
 let project = lang + '.wikipedia'
-//' '
+const tsvOut = `./files/${project}-pageviews.tsv`
+const output = `./files/${project}-pageviews.json`
 
-const fileName = () => {
+// create the filename for the last dump
+const lastDump = () => {
   let d = new Date()
   d.setDate(d.getDate() - 10) // do yesterday
   const month = `${d.getMonth() + 1}`.padStart(2, '0')
@@ -16,19 +18,19 @@ const fileName = () => {
   return `${d.getFullYear()}${month}${date}`
 }
 
-const toJSON = function () {
+const toLookupTable = function () {
   let counts = {}
-  let arr = fs
-    .readFileSync(`./files/${project}-pageviews.tsv`)
-    .toString()
-    .split(/\n/)
+  let arr = fs.readFileSync(tsvOut).toString().split(/\n/)
   for (let i = 0; i < arr.length; i += 1) {
     let a = arr[i].split(' ')
     let title = a[1]
     if (title !== undefined && a[4] !== '1') {
+      title = decode(title)
       counts[title] = Number(a[4])
     }
   }
+  counts = JSON.stringify(counts, null, 2)
+  fs.writeFileSync(output, counts)
   return counts
 }
 
@@ -36,38 +38,34 @@ const toJSON = function () {
 module.exports = async function () {
   try {
     // use an already-downloaded file?
-    if (test('-e', `./files/${project}-pageviews.tsv`)) {
+    if (test('-e', output)) {
       console.log(`using file: '${file}'`)
       console.log(green(' done.'))
-      // return
+      return
     } else {
       // download dump
-      console.log(blue(`  downloading pageview dataset:   (~4 mins)`))
-      let date = fileName()
+      console.log(blue(`  downloading pageview dataset:   (~5 mins)`))
+      let date = lastDump()
       const url = `https://dumps.wikimedia.org/other/pageview_complete/2021/2021-01/pageviews-${date}-user.bz2`
-      // const url = `https://dumps.wikimedia.org/other/pageviews/2021/2021-01/pageviews-${date}-000000.gz`
       await wget(url, {
-        onProgress: (n) => printCLI(Math.round(n.percentage * 100) + '%'),
-        output: file,
+        onProgress: (n) =>
+          '  pageviews: ' + printCLI(Math.round(n.percentage * 100) + '%'),
+        output: file + '.bz2',
       })
     }
 
     // unzip
     console.log(yellow(`\n unzipping pageviews data  (~4 mins)`))
-    exec(`bzip2 -d  ${file}`)
-    // exec(`gunzip  ${file}`)
+    exec(`bzip2 -d  ${file}.bz2`)
 
     //filter-it down to our project only
-    let cmd = `grep '^${project} .* desktop ' ./files/pageviews.tsv > ./files/${project}-pageviews.tsv`
-    exec(cmd)
+    exec(`grep '^${project} .* desktop ' ${file} > ${tsvOut}`)
 
     // remove lines with only one pageview
-    let counts = JSON.stringify(toJSON(), null, 2)
-    fs.writeFileSync(`./files/${project}-counts.json`, counts)
+    toLookupTable()
 
     // cleanup old files
-    exec(`rm ./files/pageviews.tsv`)
-    exec(`rm ./files/${project}-pageviews.tsv`)
+    exec(`rm ${file} && rm ${tsvOut}`)
   } catch (e) {
     console.log(e)
   }
