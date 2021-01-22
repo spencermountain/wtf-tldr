@@ -1,7 +1,7 @@
-const { toID } = require('../lib/fns')
+const { toID } = require('../../_lib/fns')
 
 const toFacts = function (doc) {
-  let title = doc.title()
+  let title = doc.title() || ''
   let id = toID(title)
   let facts = [
     [id, '/common/name', { title: title }],

@@ -2,17 +2,17 @@ const { workerData, parentPort } = require('worker_threads')
 const { yellow, red } = require('colorette')
 const sundayDriver = require('sunday-driver')
 const parsePage = require('./parsePage')
-let { lang, project } = require('../config')
+let { lang, project } = require('../../config')
 const fs = require('fs')
-let pageViews = {}
+// let pageViews = {}
 
-// load these
-const getPageViews = function () {
-  let str = fs
-    .readFileSync(`./files/${lang}.${project}-pageviews.json`)
-    .toString()
-  return JSON.parse(str)
-}
+// // load these
+// const getPageViews = function () {
+//   let str = fs
+//     .readFileSync(`./files/${lang}.${project}-pageviews.json`)
+//     .toString()
+//   return JSON.parse(str)
+// }
 
 const driver = {
   file: workerData.file,
@@ -25,7 +25,7 @@ const driver = {
     resume()
   },
 }
-pageViews = getPageViews()
+// pageViews = getPageViews()
 
 const p = sundayDriver(driver)
 p.catch((err) => {

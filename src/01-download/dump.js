@@ -1,7 +1,7 @@
-const { blue, green, yellow } = require('colorette')
+const { blue, yellow } = require('colorette')
 const { exec, test } = require('shelljs')
 const wget = require('node-wget-promise')
-const { lang, project } = require('../config')
+const { lang, project } = require('../../config')
 const { printCLI } = require('../_lib/fns')
 const file = `./files/${lang}.${project}-dump.xml.bz2`
 

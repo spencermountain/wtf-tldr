@@ -1,7 +1,7 @@
 const getDump = require('./01-download/dump')
 const getPageViews = require('./01-download/pageviews')
 const getRedirects = require('./01-download/redirects')
-const start = require('./02-run/01-prepare')
+const run = require('./02-run/01-prepare')
 let begin = new Date()
 
 const timeSince = function () {
@@ -24,7 +24,7 @@ const timeSince = function () {
     process.exit(1)
   })
   dl.then(() => {
-    start()
+    run()
   }).then(() => {
     console.log(`finished in ${timeSince().toLocaleString()} mins`)
   })

@@ -1,14 +1,14 @@
-const { blue, green, yellow } = require('colorette')
-const { exec, test } = require('shelljs')
+const fs = require('fs')
 const wget = require('node-wget-promise')
 const fileExists = require('../_lib/file_exists')
 const streamFile = require('../_lib/stream_file')
-const { lang, project } = require('../config')
-const { printCLI, decode } = require('../_lib/fns')
+const { blue, yellow } = require('colorette')
+const { exec, test } = require('shelljs')
+const { lang, project } = require('../../config')
+const { printCLI } = require('../_lib/fns')
 const file = `./files/${lang}.${project}-redirects.ttl.bz2`
-const tmpFile = file.replace(/\.bz2$/, '')
 const out = `./files/${lang}.${project}-redirects.json`
-const fs = require('fs')
+const tmpFile = file.replace(/\.bz2$/, '')
 
 // create the filename for the last dump
 const lastMonth = () => {

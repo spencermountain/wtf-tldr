@@ -5,8 +5,9 @@
   "author": "Spencer Kelly @spencermountain",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js",
-    "clean": "rm -rf ./files && mkdir ./files",
+    "start": "node ./src/index.js",
+    "clean": "rm -rf ./results && mkdir ./results",
+    "fresh": "rm -rf ./files && mkdir ./files",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "homepage": "https://github.com/spencermountain/wtf-tldr#readme",

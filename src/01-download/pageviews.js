@@ -1,11 +1,11 @@
+const fs = require('fs')
+const wget = require('node-wget-promise')
 const { blue, green, yellow } = require('colorette')
 const { exec, test } = require('shelljs')
-const wget = require('node-wget-promise')
-const { printCLI, decode } = require('../_lib/fns')
-const file = `./files/pageviews.tsv`
-const fs = require('fs')
-let { lang } = require('../config')
+const { decode } = require('../_lib/fns')
+let { lang } = require('../../config')
 let project = lang + '.wikipedia'
+const file = `./files/pageviews.tsv`
 const tsvOut = `./files/${project}-pageviews.tsv`
 const output = `./files/${project}-pageviews.json`
 
