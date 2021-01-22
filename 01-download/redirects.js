@@ -41,12 +41,12 @@ const toLookupTable = async function () {
 
 module.exports = async function () {
   // use an already-downloaded file?
-  if (test('-e', tmpFile)) {
-    console.log(yellow(`   using redirect file: '${file}'`))
+  if (test('-e', out)) {
+    console.log(yellow(`using redirect file: '${file}'`))
     return
   }
   // download dump
-  console.log(blue(`downloading ${lang} redirects from dbpedia`))
+  console.log(blue(`.. downloading ${lang} redirects from dbpedia`))
   let url = `https://downloads.dbpedia.org/repo/dbpedia/generic/redirects/${lastMonth()}/redirects_lang%3d${lang}.ttl.bz2`
   let exists = await fileExists(url)
   if (!exists) {
@@ -60,9 +60,9 @@ module.exports = async function () {
     output: file,
   })
   // unzip
-  console.log(yellow(`\n unzipping ${lang} dump`))
+  console.log(yellow(`\n unzipping ${lang} redirects`))
   exec(`bzip2 -d ${file}`)
-  console.log(green(' done.'))
+  console.log(yellow(`\n finished unzipping ${lang} redirects`))
 
   // remove lines with only one pageview
   await toLookupTable()
@@ -70,4 +70,3 @@ module.exports = async function () {
   // cleanup old files
   exec(`rm ${tmpFile}`)
 }
-module.exports()

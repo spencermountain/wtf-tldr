@@ -22,6 +22,12 @@ const decode = function (title = '') {
   return title
 }
 
+//tot to internal id
+const toID = function (title = '') {
+  title = title.replace(/ /g, '_')
+  title = title.trim()
+  return title
+}
 // wait a second
 const sleep = function (ms = 1500) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -31,5 +37,6 @@ module.exports = {
   printCLI: printCLI,
   encode: encode,
   decode: decode,
+  toID: toID,
   sleep: sleep,
 }

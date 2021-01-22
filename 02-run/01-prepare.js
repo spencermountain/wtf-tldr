@@ -9,7 +9,9 @@ const start = function () {
   // split dump into chunks
   let filesize = fs.statSync(file)['size']
   let chunkSize = Math.floor(filesize / count)
-
+  console.log(
+    `\n\n=============\n   parsing xml dump \n=============\n\n             \n   creating ${count} workers\n\n`
+  )
   let workers = []
   for (let i = 0; i < count; i += 1) {
     let startByte = chunkSize * i

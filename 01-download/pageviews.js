@@ -39,17 +39,15 @@ module.exports = async function () {
   try {
     // use an already-downloaded file?
     if (test('-e', output)) {
-      console.log(`using file: '${file}'`)
+      console.log(`using pagefiew file: '${file}'`)
       console.log(green(' done.'))
       return
     } else {
       // download dump
-      console.log(blue(`  downloading pageview dataset:   (~5 mins)`))
+      console.log(blue(`.. downloading pageview dataset:   (~5 mins)`))
       let date = lastDump()
       const url = `https://dumps.wikimedia.org/other/pageview_complete/2021/2021-01/pageviews-${date}-user.bz2`
       await wget(url, {
-        onProgress: (n) =>
-          '  pageviews: ' + printCLI(Math.round(n.percentage * 100) + '%'),
         output: file + '.bz2',
       })
     }
@@ -57,6 +55,7 @@ module.exports = async function () {
     // unzip
     console.log(yellow(`\n unzipping pageviews data  (~4 mins)`))
     exec(`bzip2 -d  ${file}.bz2`)
+    console.log(yellow(`\n finished unzipping pageviews`))
 
     //filter-it down to our project only
     exec(`grep '^${project} .* desktop ' ${file} > ${tsvOut}`)
@@ -69,6 +68,4 @@ module.exports = async function () {
   } catch (e) {
     console.log(e)
   }
-
-  console.log(green(' done.'))
 }

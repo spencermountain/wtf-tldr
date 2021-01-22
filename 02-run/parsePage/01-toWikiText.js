@@ -1,6 +1,3 @@
-const wtf = require('wtf_wikipedia')
-wtf.extend(require('wtf-plugin-classify'))
-wtf.extend(require('wtf-plugin-summary'))
 const wantNamespace = new RegExp('<ns>0</ns>')
 
 //doesn't support fancy things like &copy; to ©, etc
@@ -22,9 +19,9 @@ const shouldSkip = function (page) {
 }
 
 //wikipedia xml → json
-const parsePage = function (txt) {
+const parsePage = function (xml) {
   //skip redirects, etc
-  if (shouldSkip(txt) === true) {
+  if (shouldSkip(xml) === true) {
     return null
   }
   let wiki = ''
@@ -33,28 +30,27 @@ const parsePage = function (txt) {
     pageID: null,
   }
   //get page title
-  let m = txt.match(/<title>([\s\S]+?)<\/title>/)
+  let m = xml.match(/<title>([\s\S]+?)<\/title>/)
   if (m !== null) {
     metadata.title = m[1]
   } else {
     console.log('--no title found--')
   }
   //get page id
-  m = txt.match(/<id>([0-9]*?)<\/id>/)
+  m = xml.match(/<id>([0-9]*?)<\/id>/)
   if (m !== null) {
     metadata.pageID = m[1]
   } else {
     console.log('--no page id--')
   }
   //get wiki text
-  m = txt.match(/<text ([\s\S]*?)<\/text>/)
+  m = xml.match(/<text ([\s\S]*?)<\/text>/)
   if (m !== null) {
     m[1] = m[1].replace(/^.*?>/, '')
     wiki = m[1]
   }
   // improve escaping
   wiki = escapeXML(wiki)
-  // parse it into a doc
-  return wtf(wiki, metadata)
+  return wiki
 }
 module.exports = parsePage

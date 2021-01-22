@@ -1,7 +1,7 @@
 const { workerData, parentPort } = require('worker_threads')
-const { yellow, red, magenta } = require('colorette')
+const { yellow, red } = require('colorette')
 const sundayDriver = require('sunday-driver')
-const parsePage = require('./04-page')
+const parsePage = require('./parsePage')
 let { lang, project } = require('../config')
 const fs = require('fs')
 let pageViews = {}
@@ -14,38 +14,17 @@ const getPageViews = function () {
   return JSON.parse(str)
 }
 
-let pages = 0
-
 const driver = {
   file: workerData.file,
   start: workerData.start,
   end: workerData.end,
   splitter: '</page>',
   each: (xml, resume) => {
-    pages += 1
-    let doc = parsePage(xml)
-    if (doc !== null) {
-      let classify = doc.classify()
-      let title = doc.title()
-      let json = {
-        worker: workerData.n,
-        title: title,
-        popularity: pageViews[title],
-        summary: doc.summary(),
-        category: classify.category,
-        confidence: classify.score,
-      }
-      parentPort.postMessage(json)
-    }
+    let meta = parsePage(xml)
+    parentPort.postMessage(meta)
     resume()
   },
 }
-
-// logger
-// console.log(
-//   magenta(` worker #${workerData.n} @ ${pages.toLocaleString()} pages`)
-// )
-
 pageViews = getPageViews()
 
 const p = sundayDriver(driver)
@@ -57,5 +36,5 @@ p.catch((err) => {
 })
 p.then(() => {
   // clearInterval(monitor)
-  console.log(yellow(`\n=-=-=- worker #${workerData.n} done =-=-=-`))
+  console.log(yellow(`\n\n 👍 worker #${workerData.n} done.`))
 })
