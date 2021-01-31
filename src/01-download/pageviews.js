@@ -8,6 +8,9 @@ let project = lang + '.wikipedia'
 const file = `./files/pageviews.tsv`
 const tsvOut = `./files/${project}-pageviews.tsv`
 const output = `./files/${project}-pageviews.json`
+const userPage = /^User:./
+const userTalk = /^User talk:./
+const catPage = /^Category:./
 
 // create the filename for the last dump
 const lastDump = () => {
@@ -18,9 +21,20 @@ const lastDump = () => {
   return `${d.getFullYear()}${month}${date}`
 }
 
+const ignorePage = function (title) {
+  if (title === 'Main Page') {
+    return true
+  }
+  if (userPage.test(title) || userTalk.test(title) || catPage.test(title)) {
+    return true
+  }
+  return false
+}
+
 const toLookupTable = function () {
   let counts = {}
   let max = 0
+  let mean = 0
   let arr = fs.readFileSync(tsvOut).toString().split(/\n/)
   for (let i = 0; i < arr.length; i += 1) {
     let a = arr[i].split(' ')
@@ -28,15 +42,24 @@ const toLookupTable = function () {
     if (title !== undefined && a[4] !== '1') {
       title = decode(title)
       let num = Number(a[4])
+      // another filter
+      if (ignorePage(title) === true) {
+        continue
+      }
+      if (num <= 2) {
+        continue
+      }
       if (num > max) {
         max = num
       }
+      mean += num
       counts[title] = num
     }
   }
   counts = JSON.stringify(counts, null, 2)
   fs.writeFileSync(output, counts)
   console.log('max', max)
+  console.log('mean', mean / Object.keys(counts).length)
   return counts
 }
 
@@ -70,8 +93,10 @@ module.exports = async function () {
     toLookupTable()
 
     // cleanup old files
-    exec(`rm ${file} && rm ${tsvOut}`)
+    exec(`rm ${file}`)
+    exec(`rm ${tsvOut}`)
   } catch (e) {
     console.log(e)
   }
 }
+module.exports()
