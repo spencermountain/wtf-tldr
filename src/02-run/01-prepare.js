@@ -13,9 +13,9 @@ const cleanupDirs = function () {
     fs.mkdirSync('./results/meta')
     fs.mkdirSync('./results/meta/summary')
     fs.mkdirSync('./results/meta/facts')
-    fs.mkdirSync('./results/person')
+    fs.mkdirSync('./results/Person')
   }
-  let properties = ['/person/actor']
+  let properties = ['/Person/Actor']
   properties.forEach((prop) => {
     let dir = './results' + prop
     if (!fs.existsSync(dir)) {

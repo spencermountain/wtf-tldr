@@ -28,9 +28,9 @@
     "node-wget-promise": "^0.1.6",
     "shelljs": "^0.8.4",
     "sunday-driver": "^1.0.2",
-    "wtf_wikipedia": "^8.5.1",
     "wtf-plugin-classify": "^0.2.0",
     "wtf-plugin-person": "^0.1.0",
-    "wtf-plugin-summary": "^0.2.0"
+    "wtf-plugin-summary": "^0.2.0",
+    "wtf_wikipedia": "^8.5.1"
   }
 }

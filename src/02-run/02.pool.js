@@ -31,7 +31,7 @@ const run = function (arr) {
     printCLI(
       `${pages.toLocaleString()} pages processed, ${
         pending.length
-      } workers running`
+      } workers running\n\n`
     )
   }, 1500)
 

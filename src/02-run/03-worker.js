@@ -7,12 +7,13 @@ const fs = require('fs')
 // let pageViews = {}
 
 // // load these
-// const getPageViews = function () {
-//   let str = fs
-//     .readFileSync(`./files/${lang}.${project}-pageviews.json`)
-//     .toString()
-//   return JSON.parse(str)
-// }
+const getPageViews = function () {
+  let str = fs
+    .readFileSync(`./files/${lang}.${project}-pageviews.json`)
+    .toString()
+  return JSON.parse(str)
+}
+let pageViews = getPageViews()
 
 const driver = {
   file: workerData.file,
@@ -20,12 +21,11 @@ const driver = {
   end: workerData.end,
   splitter: '</page>',
   each: (xml, resume) => {
-    let meta = parsePage(xml)
+    let meta = parsePage(xml, pageViews)
     parentPort.postMessage(meta)
     resume()
   },
 }
-// pageViews = getPageViews()
 
 const p = sundayDriver(driver)
 p.catch((err) => {

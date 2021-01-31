@@ -1,14 +1,31 @@
-const toFacts = function (doc) {
-  // let title = doc.title()
-  // let category = doc.classify().category
+const getFacts = require('./getFacts')
 
+// const metaFact = function (doc, facts) {
+//   return {
+//     title: doc.title(),
+//     summary: doc.summary(),
+//     facts: Object.keys(facts),
+//   }
+// }
+
+const toFacts = function (doc, popularity) {
   let facts = {}
-  facts['meta/summary'] = {
-    text: doc.summary(),
+  let category = doc.classify().category
+  if (category) {
+    if (getFacts.hasOwnProperty(category) === true) {
+      facts[category] = getFacts[category](doc)
+    }
+    let root = category.split('/')[0]
+    if (getFacts.hasOwnProperty(root) === true) {
+      facts[root] = getFacts[root](doc)
+    }
   }
-  facts['meta/facts'] = {
-    facts: Object.keys(facts),
-  }
+  Object.keys(facts).forEach((k) => {
+    facts[k].popularity = popularity
+  })
+
+  // every page has this fact
+  // facts['meta'] = metaFact(doc, facts)
 
   return facts
 }
