@@ -51,6 +51,7 @@ const parsePage = function (xml) {
   }
   // improve escaping
   wiki = escapeXML(wiki)
-  return wiki
+  metadata.wiki = wiki
+  return metadata
 }
 module.exports = parsePage

@@ -20,17 +20,23 @@ const lastDump = () => {
 
 const toLookupTable = function () {
   let counts = {}
+  let max = 0
   let arr = fs.readFileSync(tsvOut).toString().split(/\n/)
   for (let i = 0; i < arr.length; i += 1) {
     let a = arr[i].split(' ')
     let title = a[1]
     if (title !== undefined && a[4] !== '1') {
       title = decode(title)
-      counts[title] = Number(a[4])
+      let num = Number(a[4])
+      if (num > max) {
+        max = num
+      }
+      counts[title] = num
     }
   }
   counts = JSON.stringify(counts, null, 2)
   fs.writeFileSync(output, counts)
+  console.log('max', max)
   return counts
 }
 

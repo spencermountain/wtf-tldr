@@ -10,9 +10,12 @@ const cleanupDirs = function () {
   if (fresh) {
     exec('rm -rf ./results')
     fs.mkdirSync('./results')
-    fs.mkdirSync('./results/common')
+    fs.mkdirSync('./results/meta')
+    fs.mkdirSync('./results/meta/summary')
+    fs.mkdirSync('./results/meta/facts')
+    fs.mkdirSync('./results/person')
   }
-  let properties = ['/common/name', '/common/summary', '/common/class']
+  let properties = ['/person/actor']
   properties.forEach((prop) => {
     let dir = './results' + prop
     if (!fs.existsSync(dir)) {

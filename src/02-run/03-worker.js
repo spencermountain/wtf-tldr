@@ -1,7 +1,7 @@
 const { workerData, parentPort } = require('worker_threads')
 const { yellow, red } = require('colorette')
 const sundayDriver = require('sunday-driver')
-const parsePage = require('./parsePage')
+const parsePage = require('./page')
 let { lang, project } = require('../../config')
 const fs = require('fs')
 // let pageViews = {}
