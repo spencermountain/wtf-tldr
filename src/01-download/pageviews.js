@@ -2,12 +2,11 @@ const fs = require('fs')
 const wget = require('node-wget-promise')
 const { blue, green, yellow } = require('colorette')
 const { exec, test } = require('shelljs')
-const { decode } = require('../_lib/fns')
-let { lang } = require('../../config')
-let project = lang + '.wikipedia'
+const { toName } = require('../_lib/fns')
+let { lang, project } = require('../../config')
 const file = `./files/pageviews.tsv`
-const tsvOut = `./files/${project}-pageviews.tsv`
-const output = `./files/${project}-pageviews.json`
+const tsvOut = `./files/${lang}.${project}-pageviews.tsv`
+const output = `./files/${lang}.${project}-pageviews.json`
 const userPage = /^User:./
 const userTalk = /^User talk:./
 const catPage = /^Category:./
@@ -33,14 +32,13 @@ const ignorePage = function (title) {
 
 const toLookupTable = function () {
   let counts = {}
-  let max = 0
-  let mean = 0
   let arr = fs.readFileSync(tsvOut).toString().split(/\n/)
+  console.log(arr.length, ' tsv list')
   for (let i = 0; i < arr.length; i += 1) {
     let a = arr[i].split(' ')
     let title = a[1]
     if (title !== undefined && a[4] !== '1') {
-      title = decode(title)
+      title = toName(title)
       let num = Number(a[4])
       // another filter
       if (ignorePage(title) === true) {
@@ -49,17 +47,16 @@ const toLookupTable = function () {
       if (num <= 2) {
         continue
       }
-      if (num > max) {
-        max = num
-      }
-      mean += num
+      // mean += num
       counts[title] = num
     }
   }
+  console.log('writing pageviews json')
   counts = JSON.stringify(counts, null, 2)
   fs.writeFileSync(output, counts)
-  console.log('max', max)
-  console.log('mean', mean / Object.keys(counts).length)
+  console.log('wrote pageviews json')
+  // console.log('max', max)
+  // console.log('mean', mean / Object.keys(counts).length)
   return counts
 }
 
@@ -87,7 +84,7 @@ module.exports = async function () {
     console.log(yellow(`\n finished unzipping pageviews`))
 
     //filter-it down to our project only
-    exec(`grep '^${project} .* desktop ' ${file} > ${tsvOut}`)
+    exec(`grep '^${lang}.${project} .* desktop ' ${file} > ${tsvOut}`)
 
     // remove lines with only one pageview
     toLookupTable()

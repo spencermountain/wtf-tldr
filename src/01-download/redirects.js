@@ -54,9 +54,9 @@ module.exports = async function () {
     url = `https://downloads.dbpedia.org/repo/dbpedia/generic/redirects/2020.12.01/redirects_lang%3d${lang}.ttl.bz2` //use a backup file
   }
   await wget(url, {
-    onProgress: (n) => {
-      printCLI('   dump: ' + Math.round(n.percentage * 100) + '%')
-    },
+    // onProgress: (n) => {
+    //    printCLI('   dump: ' + Math.round(n.percentage * 100) + '%')
+    // },
     output: file,
   })
   // unzip

@@ -14,6 +14,7 @@ const encode = function (title = '') {
   title = encodeURIComponent(title)
   return title
 }
+
 //wikipedia title escaping
 const decode = function (title = '') {
   title = title.replace(/_/g, ' ')
@@ -22,12 +23,20 @@ const decode = function (title = '') {
   return title
 }
 
-//tot to internal id
+//tot to internal id/file path
 const toID = function (title = '') {
   title = title.replace(/ /g, '_')
   title = title.trim()
   return title
 }
+
+//tot to internal id
+const toName = function (title = '') {
+  title = title.replace(/_/g, ' ')
+  title = title.trim()
+  return title
+}
+
 // wait a second
 const sleep = function (ms = 1500) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -38,5 +47,6 @@ module.exports = {
   encode: encode,
   decode: decode,
   toID: toID,
+  toName: toName,
   sleep: sleep,
 }
